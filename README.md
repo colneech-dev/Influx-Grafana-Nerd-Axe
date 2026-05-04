@@ -28,7 +28,7 @@ This project provides a ready-to-use monitoring stack for Nerd*Axe miner operati
 
 1. Clone this repository:
    ```
-   git clone https://github.com/wantclue/Influx-Grafana-Nerd-Axe.git
+   git clone https://github.com/colneech-dev/Influx-Grafana-Nerd-Axe.git
    cd Influx-Grafana-Nerd-Axe
    ```
 
@@ -44,7 +44,7 @@ This project provides a ready-to-use monitoring stack for Nerd*Axe miner operati
    ```
 
 4. Access Grafana:
-   - Open your browser and navigate to `http://localhost:3000`
+   - Open your browser and navigate to `http://localhost:3300`
    - Login with the credentials specified in your `.env` file
    - The pre-configured dashboard should be available
 
