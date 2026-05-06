@@ -5,7 +5,7 @@ datasources:
     uid: DIY8fp-Vz
     type: influxdb
     access: proxy
-    url: http://influxdb:8086
+    url: http://nerd-axe-influxdb:8086
     basicAuth: false
     isDefault: true
     jsonData:
