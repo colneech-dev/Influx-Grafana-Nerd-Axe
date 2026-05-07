@@ -91,7 +91,7 @@
             "type": "influxdb",
             "uid": "DIY8fp-Vz"
           },
-          "query": "from(bucket: \"nerdaxe\")\n  |> range(start: -1y)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"total_blocks_found\")\n  |> last()  \n  |> map(fn: (r) => {\n      emoji = if r._value == 0 then \"🥹\" else \"🥳\"\n      return ({_field: r._field, _time: r._time, _value: string(v: r._value) + emoji})\n  })\n",
+          "query": "from(bucket: \"nerdaxe\")\n  |> range(start: -1y)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\")\n  |> filter(fn: (r) => r[\"_field\"] == \"total_blocks_found\")\n  |> last()  \n  |> map(fn: (r) => {\n      emoji = if r._value == 0 then \"\u00f0\u0178\u00a5\u00b9\" else \"\u00f0\u0178\u00a5\u00b3\"\n      return ({_field: r._field, _time: r._time, _value: string(v: r._value) + emoji})\n  })\n",
           "refId": "A"
         }
       ],
@@ -406,10 +406,10 @@
       "type": "row"
     },
     {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "DIY8fp-Vz"
-          },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "DIY8fp-Vz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -487,16 +487,20 @@
         {
           "query": "from(bucket: \"nerdaxe\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\" and r[\"_field\"] == \"hashing_speed\") |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) |> yield(name: \"mean\")",
           "refId": "A"
+        },
+        {
+          "query": "from(bucket: \"nerdaxe\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\" and (r[\"_field\"] == \"hashing_speed_1m\")) |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) |> yield(name: \"B\")",
+          "refId": "B"
         }
       ],
-      "title": "Hashrate (GH/s)",
+      "title": "Hashrate (GH/s) \u2014 instant & 1m avg",
       "type": "timeseries"
     },
     {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "DIY8fp-Vz"
-          },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "DIY8fp-Vz"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -906,7 +910,7 @@
           "refId": "A"
         }
       ],
-      "title": "Temperature Sensors (°C)",
+      "title": "Temperature Sensors (\u00c2\u00b0C)",
       "type": "timeseries"
     },
     {
@@ -1057,7 +1061,7 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 24,
+        "w": 12,
         "x": 0,
         "y": 30
       },
@@ -1081,6 +1085,271 @@
         }
       ],
       "title": "Pool Errors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "DIY8fp-Vz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "rotrpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 12,
+        "y": 23
+      },
+      "id": 201,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"nerdaxe\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\" and (r[\"_field\"] == \"fan0_rpm\" or r[\"_field\"] == \"fan1_rpm\")) |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) |> yield(name: \"A\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Fan Speeds (RPM)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "DIY8fp-Vz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 18,
+        "y": 23
+      },
+      "id": 202,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"nerdaxe\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\" and (r[\"_field\"] == \"fan0_pwm\" or r[\"_field\"] == \"fan1_pwm\")) |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) |> yield(name: \"A\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Fan Duty Cycle (%)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "DIY8fp-Vz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "id": 203,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"nerdaxe\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\" and (r[\"_field\"] == \"last_ping_rtt\")) |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) |> yield(name: \"A\")",
+          "refId": "A"
+        },
+        {
+          "query": "from(bucket: \"nerdaxe\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r[\"_measurement\"] == \"${network}\" and (r[\"_field\"] == \"recent_ping_loss\")) |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) |> yield(name: \"B\")",
+          "refId": "B"
+        }
+      ],
+      "title": "Pool Network (Ping RTT ms & Loss %)",
       "type": "timeseries"
     }
   ],
